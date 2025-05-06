@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickSign - Sign Language Interpreter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6d28d9',
+                        secondary: '#4c1d95',
+                        accent: '#8b5cf6',
+                        dark: '#121212',
+                        'dark-light': '#1e1e1e'
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #8b5cf6, #d946ef);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero-section {
+            background: radial-gradient(circle at 50% 50%, #2d1b4e, #121212);
+        }
+        
+        .button-glow:hover {
+            box-shadow: 0 0 15px 5px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .animated-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0.15;
+            background: 
+                radial-gradient(circle at 15% 35%, rgba(139, 92, 246, 0.3) 0%, transparent 25%),
+                radial-gradient(circle at 85% 15%, rgba(217, 70, 239, 0.2) 0%, transparent 30%),
+                radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 35%);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        .delay-200 { animation-delay: 0.2s; opacity: 0; }
+        .delay-400 { animation-delay: 0.4s; opacity: 0; }
+        .delay-600 { animation-delay: 0.6s; opacity: 0; }
+    </style>
+</head>
+<body class="bg-dark text-white min-h-screen">
+    <div class="animated-bg"></div>
+    
+    <!-- Navigation -->
+    <nav class="relative z-10 py-6 px-4 md:px-8 lg:px-16">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a5 5 0 0 0-10 0v7h10V8z"></path>
+                    <path d="M8 15v2a4 4 0 0 0 8 0v-2"></path>
+                    <line x1="12" y1="8" x2="12" y2="11"></line>
+                </svg>
+                <span class="text-xl font-bold tracking-tight">QuickSign</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="/" class="text-gray-300 hover:text-white transition-colors">Home</a>
+                <a href="#features" class="text-gray-300 hover:text-white transition-colors">Features</a>
+                <a href="{{ url_for('learn') }}" class="text-gray-300 hover:text-white transition-colors">Learn</a>
+                <a href="#about" class="text-gray-300 hover:text-white transition-colors">About</a>
+            </div>
+            <div>
+                <a href="{{ url_for('signlanguage') }}" class="hidden md:inline-block py-2 px-6 bg-primary hover:bg-accent rounded-lg transition-all duration-300 button-glow">Try Now</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero-section relative z-10 py-16 md:py-24">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight fade-in">
+                        Breaking Barriers with <span class="gradient-text">Sign Language</span> Technology
+                    </h1>
+                    <p class="mt-6 text-lg text-gray-300 fade-in delay-200">
+                        QuickSign harnesses AI to interpret sign language in real-time, making communication accessible for everyone.
+                    </p>
+                    <div class="mt-10 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 fade-in delay-400">
+                        <a href="{{ url_for('signlanguage') }}" class="py-3 px-8 bg-primary hover:bg-accent rounded-lg text-center transition-all duration-300 button-glow">
+                            Try Now
+                        </a>
+                        <a href="{{ url_for('learn') }}" class="py-3 px-8 border border-accent text-accent hover:bg-accent hover:bg-opacity-10 rounded-lg text-center transition-all duration-300">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+                <div class="flex justify-center fade-in delay-600">
+                    <div class="relative w-full max-w-md">
+                        <div class="bg-dark-light p-2 rounded-2xl overflow-hidden shadow-xl animate-float">
+                            <img src="{{ url_for('static', filename='signlanguageimage.png') }}" alt="Sign Language Illustration" class="w-full h-auto rounded-xl">
+                            <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-accent rounded-full opacity-20 blur-xl"></div>
+                            <div class="absolute -top-6 -left-6 w-24 h-24 bg-primary rounded-full opacity-20 blur-xl"></div>
+                        </div>
+                        <div class="absolute -z-10 top-1/4 right-0 w-full h-full bg-accent opacity-5 blur-3xl rounded-full animate-pulse-slow"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features" class="relative z-10 py-20 bg-dark-light">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold">
+                    <span class="gradient-text">Powerful Features</span>
+                </h2>
+                <p class="mt-4 text-gray-400 max-w-2xl mx-auto">
+                    Discover how QuickSign is breaking communication barriers through innovative technology.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-dark p-8 rounded-xl hover:shadow-lg hover:shadow-accent/10 transition-all duration-300">
+                    <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Real-Time Recognition</h3>
+                    <p class="text-gray-400">
+                        Experience instant sign language detection that transforms hand movements into text in real-time.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="bg-dark p-8 rounded-xl hover:shadow-lg hover:shadow-accent/10 transition-all duration-300">
+                    <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">High Accuracy</h3>
+                    <p class="text-gray-400">
+                        Built on advanced YOLO technology for precise recognition of hand signs with minimal errors.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="bg-dark p-8 rounded-xl hover:shadow-lg hover:shadow-accent/10 transition-all duration-300">
+                    <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Accessible Interface</h3>
+                    <p class="text-gray-400">
+                        Intuitive and user-friendly design makes sign language interpretation available to everyone.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Call to Action -->
+    <section id="about" class="relative z-10 py-20">
+        <div class="max-w-4xl mx-auto px-4 md:px-8 lg:px-16 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                Ready to experience <span class="gradient-text">QuickSign</span>?
+            </h2>
+            <p class="text-gray-300 mb-10 max-w-2xl mx-auto">
+                Join us in bridging communication gaps with cutting-edge sign language technology.
+                Start your journey with QuickSign today.
+            </p>
+            <a href="{{ url_for('signlanguage') }}" class="inline-block py-3 px-8 bg-primary hover:bg-accent rounded-lg transition-all duration-300 button-glow">
+                Try Now
+            </a>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="relative z-10 py-10 bg-dark-light border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8a5 5 0 0 0-10 0v7h10V8z"></path>
+                        <path d="M8 15v2a4 4 0 0 0 8 0v-2"></path>
+                        <line x1="12" y1="8" x2="12" y2="11"></line>
+                    </svg>
+                    <span class="text-lg font-bold tracking-tight">QuickSign</span>
+                </div>
+                <div class="text-gray-500 text-sm">
+                    © 2025 QuickSign. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Animation for elements when they enter the viewport
+        document.addEventListener('DOMContentLoaded', function() {
+            // Already visible elements should start animating
+            document.querySelectorAll('.fade-in').forEach(function(el) {
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickSign - Learn Sign Language</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6d28d9',
+                        secondary: '#4c1d95',
+                        accent: '#8b5cf6',
+                        dark: '#121212',
+                        'dark-light': '#1e1e1e'
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #8b5cf6, #d946ef);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .animated-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.15;
+            background: 
+                radial-gradient(circle at 15% 35%, rgba(139, 92, 246, 0.3) 0%, transparent 25%),
+                radial-gradient(circle at 85% 15%, rgba(217, 70, 239, 0.2) 0%, transparent 30%),
+                radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 35%);
+        }
+        
+        .card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+        
+        .alphabet-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .alphabet-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        .delay-200 { animation-delay: 0.2s; opacity: 0; }
+        .delay-400 { animation-delay: 0.4s; opacity: 0; }
+        
+        .sign-image {
+            width: 100%;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 0.5rem;
+            background-color: rgba(20, 20, 20, 0.5);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-dark text-white min-h-screen">
+    <div class="animated-bg"></div>
+    
+    <!-- Navigation -->
+    <nav class="py-6 px-4 md:px-8 lg:px-16">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a5 5 0 0 0-10 0v7h10V8z"></path>
+                    <path d="M8 15v2a4 4 0 0 0 8 0v-2"></path>
+                    <line x1="12" y1="8" x2="12" y2="11"></line>
+                </svg>
+                <span class="text-xl font-bold tracking-tight">QuickSign</span>
+            </a>
+            <div class="flex items-center space-x-4">
+                <a href="/" class="py-2 px-4 hover:bg-dark-light rounded-lg transition-all duration-300">
+                    Home
+                </a>
+                <a href="/signlanguage" class="py-2 px-6 bg-primary hover:bg-accent rounded-lg transition-all duration-300">
+                    Try Now
+                </a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="relative py-16 md:py-24">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-bold fade-in">
+                    Learn <span class="gradient-text">Sign Language</span>
+                </h1>
+                <p class="mt-6 text-lg text-gray-300 max-w-3xl mx-auto fade-in delay-200">
+                    Discover how to communicate using American Sign Language (ASL) alphabet signs. 
+                    These hand gestures represent individual letters and form the foundation of sign language communication.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center fade-in delay-400">
+                <div>
+                    <div class="card p-6">
+                        <h2 class="text-2xl font-semibold mb-4">Getting Started with QuickSign</h2>
+                        <p class="text-gray-300 mb-4">
+                            QuickSign is designed to make learning and using sign language easier for everyone. 
+                            Our AI-powered system recognizes hand gestures in real-time and translates them into text.
+                        </p>
+                        <h3 class="text-xl font-medium mt-6 mb-3">How to Use QuickSign:</h3>
+                        <ol class="text-gray-300 space-y-3 list-decimal pl-5">
+                            <li>
+                                <span class="font-medium text-white">Position your hand:</span> Make sure your hand is clearly visible to your camera and well-lit.
+                            </li>
+                            <li>
+                                <span class="font-medium text-white">Form the sign:</span> Create the hand shape for the letter you want to communicate.
+                            </li>
+                            <li>
+                                <span class="font-medium text-white">Hold steady:</span> Keep your hand position stable for a moment to allow the system to recognize it.
+                            </li>
+                            <li>
+                                <span class="font-medium text-white">Check the display:</span> The recognized letter will appear in the "Detected Letter" section.
+                            </li>
+                            <li>
+                                <span class="font-medium text-white">Build words:</span> Consecutive recognized letters will form words in the text output area.
+                            </li>
+                        </ol>
+                        <div class="mt-8">
+                            <a href="/signlanguage" class="inline-block py-3 px-8 bg-primary hover:bg-accent rounded-lg transition-all duration-300">
+                                Try It Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="w-full max-w-md relative">
+                        <img src="{{ url_for('static', filename='images/sign-language-intro.jpg') }}" alt="Sign Language Illustration" class="w-full h-auto rounded-xl animate-float" onerror="this.src='/api/placeholder/400/320'">
+                        <div class="absolute -z-10 bottom-0 left-1/4 w-3/4 h-1/2 bg-accent opacity-20 blur-2xl rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Alphabet Section -->
+    <section id="alphabet" class="py-16 bg-dark-light">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold">
+                    Sign Language <span class="gradient-text">Alphabet</span>
+                </h2>
+                <p class="mt-4 text-gray-400 max-w-2xl mx-auto">
+                    Practice these hand signs to communicate using the American Sign Language alphabet.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
+                <!-- Letter A -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='A.png') }}" alt="ASL Letter A" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">A</div>
+                    <div class="text-sm text-gray-400">Close your hand into a fist with thumb to the side</div>
+                </div>
+                
+                <!-- Letter B -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='B.png') }}" alt="ASL Letter B" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">B</div>
+                    <div class="text-sm text-gray-400">Hold your hand up with fingers together and thumb tucked</div>
+                </div>
+                
+                <!-- Letter C -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='C.png') }}" alt="ASL Letter C" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">C</div>
+                    <div class="text-sm text-gray-400">Curve your hand into a C shape</div>
+                </div>
+                
+                <!-- Letter D -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='D.png') }}" alt="ASL Letter D" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">D</div>
+                    <div class="text-sm text-gray-400">Index finger pointed up, other fingers and thumb forming an O</div>
+                </div>
+                
+                <!-- Letter E -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='E.png') }}" alt="ASL Letter E" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">E</div>
+                    <div class="text-sm text-gray-400">Curl your fingers in toward palm with thumb tucked</div>
+                </div>
+                
+                <!-- Letter F -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='F.png') }}" alt="ASL Letter F" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">F</div>
+                    <div class="text-sm text-gray-400">Touch thumb to index, other fingers extended</div>
+                </div>
+                
+                <!-- Letter G -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='G.png') }}" alt="ASL Letter G" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">G</div>
+                    <div class="text-sm text-gray-400">Point index finger forward, thumb and other fingers extended</div>
+                </div>
+                
+                <!-- Letter H -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='H.png') }}" alt="ASL Letter H" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">H</div>
+                    <div class="text-sm text-gray-400">Extend index and middle fingers together</div>
+                </div>
+                
+                <!-- Letter I -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='I.png') }}" alt="ASL Letter I" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">I</div>
+                    <div class="text-sm text-gray-400">Make a fist with pinky finger extended</div>
+                </div>
+                
+                <!-- Letter J -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='J.png') }}" alt="ASL Letter J" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">J</div>
+                    <div class="text-sm text-gray-400">Extend pinky and trace a J shape</div>
+                </div>
+                
+                <!-- Letter K -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='K.png') }}" alt="ASL Letter K" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">K</div>
+                    <div class="text-sm text-gray-400">Index finger and middle finger form a V from thumb</div>
+                </div>
+                
+                <!-- Letter L -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='L.png') }}" alt="ASL Letter L" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">L</div>
+                    <div class="text-sm text-gray-400">Form an L shape with thumb and index finger</div>
+                </div>
+                
+                <!-- Letter M -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='M.png') }}" alt="ASL Letter M" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">M</div>
+                    <div class="text-sm text-gray-400">Three fingers tucked under thumb</div>
+                </div>
+                
+                <!-- Letter N -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='N.png') }}" alt="ASL Letter N" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">N</div>
+                    <div class="text-sm text-gray-400">Two fingers tucked under thumb</div>
+                </div>
+                
+                <!-- Letter O -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='O.png') }}" alt="ASL Letter O" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">O</div>
+                    <div class="text-sm text-gray-400">Form a circle with all fingertips and thumb</div>
+                </div>
+                
+                <!-- Letter P -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='P.png') }}" alt="ASL Letter P" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">P</div>
+                    <div class="text-sm text-gray-400">Point middle finger down with index extended</div>
+                </div>
+                
+                <!-- Letter Q -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='Q.png') }}" alt="ASL Letter Q" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">Q</div>
+                    <div class="text-sm text-gray-400">Point index finger down with thumb and index making a G</div>
+                </div>
+                
+                <!-- Letter R -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='R.png') }}" alt="ASL Letter R" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">R</div>
+                    <div class="text-sm text-gray-400">Cross index and middle finger together</div>
+                </div>
+                
+                <!-- Letter S -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='S.png') }}" alt="ASL Letter S" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">S</div>
+                    <div class="text-sm text-gray-400">Make a fist with thumb wrapped over fingers</div>
+                </div>
+                
+                <!-- Letter T -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='T.png') }}" alt="ASL Letter T" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">T</div>
+                    <div class="text-sm text-gray-400">Thumb between index and middle finger</div>
+                </div>
+                
+                <!-- Letter U -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='U.png') }}" alt="ASL Letter U" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">U</div>
+                    <div class="text-sm text-gray-400">Extend index and middle finger up together</div>
+                </div>
+                
+                <!-- Letter V -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='V.png') }}" alt="ASL Letter V" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">V</div>
+                    <div class="text-sm text-gray-400">Make a V shape with index and middle finger</div>
+                </div>
+                
+                <!-- Letter W -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='W.png') }}" alt="ASL Letter W" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">W</div>
+                    <div class="text-sm text-gray-400">Extend index, middle, and ring fingers</div>
+                </div>
+                
+                <!-- Letter X -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='X.png') }}" alt="ASL Letter X" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">X</div>
+                    <div class="text-sm text-gray-400">Hook your index finger and thumb together</div>
+                </div>
+                
+                <!-- Letter Y -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='Y.png') }}" alt="ASL Letter Y" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">Y</div>
+                    <div class="text-sm text-gray-400">Extend thumb and pinky, other fingers closed</div>
+                </div>
+                
+                <!-- Letter Z -->
+                <div class="alphabet-card bg-dark p-4 rounded-xl text-center">
+                    <img src="{{ url_for('static', filename='Z.png') }}" alt="ASL Letter Z" class="sign-image" onerror="this.src='/api/placeholder/200/120'">
+                    <div class="text-5xl font-bold gradient-text mb-2">Z</div>
+                    <div class="text-sm text-gray-400">Draw a Z shape with your index finger</div>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <p class="text-gray-400 mb-6">
+                    Practice these signs regularly to build your proficiency in American Sign Language.
+                </p>
+                <a href="/signlanguage" class="inline-block py-3 px-8 bg-primary hover:bg-accent rounded-lg transition-all duration-300">
+                    Try The Interpreter
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Tips Section -->
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold">
+                    Tips for <span class="gradient-text">Better Recognition</span>
+                </h2>
+                <p class="mt-4 text-gray-400 max-w-2xl mx-auto">
+                    Follow these guidelines to improve the accuracy of our sign language detection system.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Tip 1 -->
+                <div class="card p-6">
+                    <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Good Lighting</h3>
+                    <p class="text-gray-300">
+                        Ensure your hand is well-lit from the front. Avoid backlighting or dim environments as they can reduce recognition accuracy.
+                    </p>
+                </div>
+                
+                <!-- Tip 2 -->
+                <div class="card p-6">
+                    <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Camera Position</h3>
+                    <p class="text-gray-300">
+                        Position your hand at the center of the camera frame, about 1-2 feet away from the camera. Make sure your entire hand is visible.
+                    </p>
+                </div>
+                
+                <!-- Tip 3 -->
+                <div class="card p-6">
+                    <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Hold Steady</h3>
+                    <p class="text-gray-300">
+                        Hold each sign steady for a few seconds to allow the system to recognize it accurately. Avoid rapid movements between signs.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Call to Action Section -->
+    <section class="py-20 bg-gradient-to-b from-dark to-dark-light">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 text-center">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                    Ready to <span class="gradient-text">Start Signing?</span>
+                </h2>
+                <p class="text-lg text-gray-300 mb-10">
+                    Begin your journey into sign language communication today. Our AI-powered tool makes learning ASL interactive, engaging, and accessible to everyone.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="{{ url_for('signlanguage') }}" class="w-full sm:w-auto py-4 px-8 bg-primary hover:bg-accent rounded-lg transition-all duration-300 text-lg font-medium">
+                        Launch Interpreter
+                    </a>
+                    <a href="#alphabet" class="w-full sm:w-auto py-4 px-8 bg-dark border border-accent/50 hover:border-accent rounded-lg transition-all duration-300 text-lg font-medium">
+                        View Alphabet Guide
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-12 bg-dark-light">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-6 md:mb-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8a5 5 0 0 0-10 0v7h10V8z"></path>
+                        <path d="M8 15v2a4 4 0 0 0 8 0v-2"></path>
+                        <line x1="12" y1="8" x2="12" y2="11"></line>
+                    </svg>
+                    <span class="text-lg font-semibold tracking-tight">QuickSign</span>
+                </div>
+                <div class="text-sm text-gray-400">
+                    &copy; 2025 QuickSign. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

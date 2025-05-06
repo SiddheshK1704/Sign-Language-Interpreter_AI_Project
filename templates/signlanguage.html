@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickSign - Sign Language Interpreter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6d28d9',
+                        secondary: '#4c1d95',
+                        accent: '#8b5cf6',
+                        dark: '#121212',
+                        'dark-light': '#1e1e1e'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #8b5cf6, #d946ef);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .camera-feed {
+            position: relative;
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .camera-feed:hover {
+            box-shadow: 0 8px 32px 0 rgba(139, 92, 246, 0.2);
+        }
+        
+        .letter-display {
+            border-radius: 1rem;
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .letter-display:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+        
+        .animated-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.2;
+            background: 
+                radial-gradient(circle at 15% 35%, rgba(139, 92, 246, 0.3) 0%, transparent 25%),
+                radial-gradient(circle at 85% 15%, rgba(217, 70, 239, 0.2) 0%, transparent 30%),
+                radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 35%);
+        }
+        
+        .status-indicator {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 9999px;
+            font-size: 14px;
+        }
+        
+        .status-dot {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            background-color: #10b981;
+            margin-right: 8px;
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            padding: 10px;
+            background-color: rgba(109, 40, 217, 0.2);
+            color: #8b5cf6;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-icon:hover {
+            background-color: rgba(109, 40, 217, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        @keyframes pop {
+            0% { transform: scale(0.95); opacity: 0; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .detected-letter {
+            animation: pop 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+        }
+        
+        .text-output {
+            min-height: 60px;
+            overflow-y: auto;
+            overflow-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="bg-dark text-white min-h-screen">
+    <div class="animated-bg"></div>
+    
+    <!-- Navigation -->
+    <nav class="py-4 px-4 md:px-8 lg:px-16">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a5 5 0 0 0-10 0v7h10V8z"></path>
+                    <path d="M8 15v2a4 4 0 0 0 8 0v-2"></path>
+                    <line x1="12" y1="8" x2="12" y2="11"></line>
+                </svg>
+                <span class="text-xl font-bold tracking-tight">QuickSign</span>
+            </a>
+            <div class="flex items-center space-x-4">
+                <a href="/" class="py-2 px-4 hover:bg-dark-light rounded-lg transition-all duration-300">
+                    Home
+                </a>
+                <a href="/learn" class="py-2 px-4 hover:bg-dark-light rounded-lg transition-all duration-300">
+                    Learn
+                </a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="py-8 px-4 md:px-8 lg:px-16">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold">
+                    <span class="gradient-text">Sign Language Interpreter</span>
+                </h1>
+                <p class="mt-4 text-gray-400 max-w-2xl mx-auto">
+                    Point your camera at your hand signs and watch as QuickSign translates them into text in real-time.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Camera Section -->
+                <div class="lg:col-span-8">
+                    <div class="camera-feed p-4 relative">
+                        <div class="status-indicator">
+                            <div class="status-dot"></div>
+                            <span>Live</span>
+                        </div>
+                        <img id="video-feed" src="/video_feed" alt="Camera Feed" class="w-full h-auto rounded-lg">
+                    </div>
+                </div>
+                
+                <!-- Letter Display Section -->
+                <div class="lg:col-span-4">
+                    <div class="letter-display p-6 h-full flex flex-col">
+                        <h3 class="text-xl font-semibold mb-4 text-center">Detected Letter</h3>
+                        
+                        <div class="flex-grow flex flex-col items-center justify-center">
+                            <div id="current-letter" class="text-8xl md:text-9xl font-bold gradient-text mb-6 detected-letter">
+                                <span>?</span>
+                            </div>
+                            
+                            <div class="w-full mt-4">
+                                <div class="text-sm text-gray-400 mb-2">Text Output:</div>
+                                <div id="text-output" class="bg-dark-light p-3 rounded-lg text-output">
+                                    Your detected letters will appear here
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 flex justify-center space-x-3">
+                            <button id="btn-clear" class="btn-icon" title="Clear Text">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </button>
+                            <button id="btn-space" class="btn-icon" title="Add Space">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 10h18M6 6L3 10l3 4M18 6l3 4-3 4"></path>
+                                </svg>
+                            </button>
+                            <button id="btn-speak" class="btn-icon" title="Speak Text">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Instructions Section -->
+            <div class="mt-12 p-6 bg-dark-light rounded-xl">
+                <h3 class="text-xl font-semibold mb-4">How to Use</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                        </div>
+                        <h4 class="font-medium mb-2">Position Your Hand</h4>
+                        <p class="text-gray-400 text-sm">Position your hand clearly in front of the camera in good lighting.</p>
+                    </div>
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </div>
+                        <h4 class="font-medium mb-2">Form ASL Signs</h4>
+                        <p class="text-gray-400 text-sm">Make clear ASL letter hand signs and hold them steady for detection.</p>
+                    </div>
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </div>
+                        <h4 class="font-medium mb-2">See Results</h4>
+                        <p class="text-gray-400 text-sm">Watch as your signs are detected and translated into text in real-time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="py-8 px-4 md:px-8 lg:px-16 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a5 5 0 0 0-10 0v7h10V8z"></path>
+                    <path d="M8 15v2a4 4 0 0 0 8 0v-2"></path>
+                    <line x1="12" y1="8" x2="12" y2="11"></line>
+                </svg>
+                <span class="text-lg font-bold tracking-tight">QuickSign</span>
+            </div>
+            <div class="text-sm text-gray-400">
+                &copy; 2025 QuickSign. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Variables to track current text
+        let textOutput = "";
+        let lastLetterTime = 0;
+        let currentDetectedLetter = "";
+        let lastDetectedLetter = "";
+        let debounceTimer = null;
+        
+        // DOM elements
+        const currentLetterEl = document.getElementById('current-letter');
+        const textOutputEl = document.getElementById('text-output');
+        const btnClear = document.getElementById('btn-clear');
+        const btnSpace = document.getElementById('btn-space');
+        const btnSpeak = document.getElementById('btn-speak');
+        
+        // Function to fetch the current detected letter from the server
+        function fetchCurrentLetter() {
+            fetch('/get_letter')
+                .then(response => response.json())
+                .then(data => {
+                    const letter = data.letter;
+                    
+                    // Only process if we have a letter
+                    if (letter && letter.trim() !== "") {
+                        handleNewLetter(letter);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching letter:', error);
+                });
+        }
+        
+        // Function to handle a new detected letter
+        function handleNewLetter(letter) {
+            currentDetectedLetter = letter;
+            
+            // Update the display
+            currentLetterEl.querySelector('span').textContent = letter;
+            
+            // Apply pop animation
+            currentLetterEl.classList.remove('detected-letter');
+            void currentLetterEl.offsetWidth; // Force reflow
+            currentLetterEl.classList.add('detected-letter');
+            
+            // Debounce the letter addition to text
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                // Only add if it's a new letter or enough time has passed
+                const now = Date.now();
+                if (letter !== lastDetectedLetter || (now - lastLetterTime > 2000)) {
+                    textOutput += letter;
+                    updateTextOutput();
+                    lastDetectedLetter = letter;
+                    lastLetterTime = now;
+                }
+            }, 1000); // 1 second debounce
+        }
+        
+        // Function to update the text output display
+        function updateTextOutput() {
+            if (textOutput.trim() === "") {
+                textOutputEl.textContent = "Your detected letters will appear here";
+            } else {
+                textOutputEl.textContent = textOutput;
+            }
+        }
+        
+        // Event listeners for buttons
+        btnClear.addEventListener('click', () => {
+            textOutput = "";
+            updateTextOutput();
+        });
+        
+        btnSpace.addEventListener('click', () => {
+            textOutput += " ";
+            updateTextOutput();
+        });
+        
+        btnSpeak.addEventListener('click', () => {
+            if (textOutput.trim() !== "") {
+                const utterance = new SpeechSynthesisUtterance(textOutput);
+                window.speechSynthesis.speak(utterance);
+            }
+        });
+        
+        // Start polling for letters
+        setInterval(fetchCurrentLetter, 200); // Poll every 200ms
+
+        // Set detection_active to true when page loads
+        fetch('/activate_detection', {
+            method: 'POST'
+        }).catch(error => {
+            console.error('Error activating detection:', error);
+        });
+        
+        // Make sure camera is properly loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoFeed = document.getElementById('video-feed');
+            
+            // Reload the image if it fails to load
+            videoFeed.onerror = function() {
+                console.log("Video feed failed to load, retrying...");
+                setTimeout(() => {
+                    videoFeed.src = "/video_feed?" + new Date().getTime();
+                }, 1000);
+            };
+            
+            // Ensure detection is active
+            fetch('/activate_detection', {
+                method: 'POST'
+            }).catch(error => {
+                console.error('Error activating detection:', error);
+            });
+        });
+    </script>
+</body>
+</html>

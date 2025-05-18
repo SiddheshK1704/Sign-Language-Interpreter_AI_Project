@@ -11,7 +11,7 @@ This project is a real-time sign language detection web application built using 
 │   ├── signlanguageimage.png   # Additional images for the Learn page
 │   └── ...                     # Other static files
 │
-├── templates/                  # HTML templates (index, learn, signlanguage pages)
+├── templates/                  # HTML templates
 │   ├── index.html
 │   ├── learn.html
 │   └── signlanguage.html
@@ -21,7 +21,6 @@ This project is a real-time sign language detection web application built using 
 ├── best (3).pt                 # Trained YOLOv8 model weights
 ├── venv/                       # Python virtual environment
 └── .gitignore                  # Git ignore file
-
 
 
 ---

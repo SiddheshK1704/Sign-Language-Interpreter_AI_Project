@@ -5,6 +5,7 @@ This project is a real-time sign language detection web application built using 
 
 ## 📁 Project Structure
 
+```
 .
 ├── static/                     # Contains all the sign language alphabet images
 │   ├── A.png to Z.png          # Reference images for each letter
@@ -21,6 +22,7 @@ This project is a real-time sign language detection web application built using 
 ├── best (3).pt                 # Trained YOLOv8 model weights
 ├── venv/                       # Python virtual environment
 └── .gitignore                  # Git ignore file
+```
 
 
 ---

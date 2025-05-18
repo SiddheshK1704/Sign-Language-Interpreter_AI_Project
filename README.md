@@ -5,14 +5,22 @@ This project is a real-time sign language detection web application built using 
 
 ## 📁 Project Structure
 .
-├── static/                  # Contains all the sign language alphabet images
-│   ├── A.png to Z.png       # Reference images for each letter
-│   └── signlanguageimage... # Additional images for the Learn page
-├── templates/               # HTML templates (index.html, signlanguage.html, learn.html)
-├── app.py                   # Main Flask application
-├── best (3).pt              # Trained YOLOv8 model weights
-├── a.py                     # (optional) extra script
-├── venv/                    # Python virtual environment
+├── static/                     # Contains all the sign language alphabet images
+│   ├── A.png to Z.png          # Reference images for each letter
+│   ├── signlanguageimage.png   # Additional images for the Learn page
+│   └── ...                     # Other static assets (e.g., waiting.jpg)
+│
+├── templates/                  # HTML templates
+│   ├── index.html
+│   ├── signlanguage.html
+│   └── learn.html
+│
+├── app.py                      # Main Flask application
+├── a.py                        # (Optional) Extra script
+├── best (3).pt                 # Trained YOLOv8 model weights
+├── venv/                       # Python virtual environment
+└── .gitignore                  # Git ignore file
+
 
 
 ---

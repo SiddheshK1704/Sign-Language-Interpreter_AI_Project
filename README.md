@@ -14,6 +14,7 @@ This project is a real-time sign language detection web application built using 
 ├── a.py                     # (optional) extra script
 ├── venv/                    # Python virtual environment
 
+
 ---
 
 ## 🚀 Features
